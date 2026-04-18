@@ -14,6 +14,7 @@
        ■ 編集ガイド
        - テキストの変更: HTMLの該当テキストを直接編集
        - 合言葉の変更: CORRECT_PASSWORD の値を変更
+       - 公開前に中身を隠す: GATE_CONTENT_LOCKED を true（公開後は false）
        - 画像の変更: img タグの src を差し替え
        - 色の変更: :root のカスタムプロパティを変更
        - カードの追加/削除: cards-grid 内の .secret-card を追加/削除
@@ -903,7 +904,7 @@
 
   <!-- ============================================================
        ゲートページ（パスワード入力画面）
-       合言葉を変更するには下の CORRECT_PASSWORD を編集してください
+       合言葉は CORRECT_PASSWORD、公開前ロックは GATE_CONTENT_LOCKED（スクリプト内）
        ============================================================ -->
   <div id="gate-page">
     <div class="bg-img">
@@ -1169,6 +1170,11 @@
     // ■ 合言葉（ここを変更すると合言葉が変わります）
     const CORRECT_PASSWORD = '裏スキマ';
 
+    // ■ 公開準備ができるまで true のままにすると、合言葉が正しくても中身へ進めません
+    const GATE_CONTENT_LOCKED = true;
+    const GATE_WRONG_MSG = '合言葉が違うようだ...';
+    const GATE_LOCKED_MSG = '準備中のため、まだ先へ進めません';
+
     // --- 訪問者カウント（ランダム表示） ---
     document.getElementById('visitor-count').textContent = Math.floor(Math.random() * 30) + 20;
 
@@ -1191,28 +1197,38 @@
 
     gateForm.addEventListener('submit', (e) => {
       e.preventDefault();
-      if (passwordInput.value === CORRECT_PASSWORD) {
-        // 正解 → アンロック演出
-        gatePage.classList.add('exiting');
-        setTimeout(() => {
-          gatePage.style.display = 'none';
-          unlockScreen.classList.add('active');
-          setTimeout(() => {
-            unlockScreen.classList.remove('active');
-            unlockScreen.style.display = 'none';
-            mainPage.classList.add('active');
-            initScrollAnimations();
-          }, 1800);
-        }, 800);
-      } else {
-        // 不正解
+      if (passwordInput.value !== CORRECT_PASSWORD) {
+        gateError.textContent = GATE_WRONG_MSG;
         passwordInput.classList.add('error');
         gateError.classList.add('show');
         setTimeout(() => {
           passwordInput.classList.remove('error');
           gateError.classList.remove('show');
         }, 2000);
+        return;
       }
+      if (GATE_CONTENT_LOCKED) {
+        gateError.textContent = GATE_LOCKED_MSG;
+        passwordInput.classList.add('error');
+        gateError.classList.add('show');
+        setTimeout(() => {
+          passwordInput.classList.remove('error');
+          gateError.classList.remove('show');
+        }, 2800);
+        return;
+      }
+      // 正解 → アンロック演出
+      gatePage.classList.add('exiting');
+      setTimeout(() => {
+        gatePage.style.display = 'none';
+        unlockScreen.classList.add('active');
+        setTimeout(() => {
+          unlockScreen.classList.remove('active');
+          unlockScreen.style.display = 'none';
+          mainPage.classList.add('active');
+          initScrollAnimations();
+        }, 1800);
+      }, 800);
     });
 
     // --- ナビバーのスクロール検知 ---
