@@ -359,9 +359,20 @@
 
     .gate-hint {
       font-family: var(--font-body);
-      font-size: 10px;
-      color: rgba(107,101,128,0.2);
-      margin-top: 0.5rem;
+      font-size: 13px;
+      font-weight: 500;
+      color: rgba(232, 224, 208, 0.95);
+      text-align: center;
+      line-height: 1.55;
+      max-width: 22rem;
+      margin-top: 0.75rem;
+      padding: 12px 18px;
+      background: rgba(13, 13, 26, 0.72);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(245, 166, 35, 0.28);
+      border-radius: 8px;
+      box-shadow: 0 4px 28px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+      text-shadow: 0 1px 3px rgba(13, 13, 26, 0.9);
       opacity: 0;
       animation: fadeIn 1s ease-out 2.5s forwards;
     }
@@ -938,7 +949,7 @@
         <div class="gate-error" id="gate-error">合言葉が違うようだ...</div>
         <button type="submit" class="gate-submit">扉をひらく</button>
       </form>
-      <p class="gate-hint">合言葉はInstagramにて公開します</p>
+      <p class="gate-hint">合言葉は後日Instagramにて公開します</p>
       <div class="gate-line-bottom"></div>
     </div>
   </div>
